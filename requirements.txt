@@ -1,1 +1,23 @@
 python-dotenv
+numpy<2
+pandas
+matplotlib
+seaborn
+requests
+spacy
+# python -m spacy download en_core_web_sm
+sentence_transformers
+
+jupyter
+ipywidgets
+
+pdfplumber
+ollama
+# langchain
+# langchain_community
+
+# !pip install git+https://github.com/openai/swarm.git --quiet
+# !pip install ollama openai --quiet
+
+pytesseract
+tesseract
