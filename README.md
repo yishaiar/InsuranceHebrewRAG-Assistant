@@ -44,3 +44,11 @@ architecture
 4.	Function to Display question and answer
 5.	Use chat gpt for questions and correct answers db for validation
 6.	Verify correct answers from rag using bert similarity/embedding
+
+
+Pgadmin with multiple collections schema , Pgadmin, elastic search, redis
+
+Rabitmq, rest api for manual message, 
+Container is service with 1 goal separation is by front end/backend
+Question if this is used in multiple places
+No reason to open multiple services which all for same usage
