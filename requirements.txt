@@ -13,11 +13,10 @@ ipywidgets
 
 pdfplumber
 ollama
-# langchain
+langchain
 # langchain_community
 
 # !pip install git+https://github.com/openai/swarm.git --quiet
 # !pip install ollama openai --quiet
 
-pytesseract
-tesseract
+faiss-cpu

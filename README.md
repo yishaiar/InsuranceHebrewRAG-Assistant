@@ -38,8 +38,16 @@ Describe an architectural concept, assuming that the process is carried out in a
 8.	Externalizing a service that receives the information required for analysis (in JSON format) and returns an answer object that includes the text of the summary and synchronously running the service (returning the error including an error code)
 
 architecture
-1.	Load the pdf and parse it
-2.	Create rag
+1.	Load the pdf and parse it:
+    a. Open PDF: Load the PDF and extract text and word-level metadata (e.g., position) from each page.
+    b. Track Word Positions: Identify and map the position of the first word in each line.
+    c. Extract the line metadata from each first word metadata
+    e. Remove Header and Footer: Exclude text located in the header and footer regions based on vertical position.
+    f. Format Text: Adjust punctuation, reverse misaligned words, and ensure proper formatting for English and Hebrew text.
+    h. Clean and Return Text: After processing all pages, return the cleaned and formatted text, excluding headers/footers.
+
+2.	Create rag 
+    a.  split text into chunks
 3.	Create function to ask questions (no need for UI)
 4.	Function to Display question and answer
 5.	Use chat gpt for questions and correct answers db for validation
