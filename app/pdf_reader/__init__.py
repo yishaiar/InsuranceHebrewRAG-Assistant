@@ -21,14 +21,17 @@ def format_text(text):
     new_text2 = ''
 
     for line in new_text1.split('\n'):
-        line = line.replace('.',' . ').replace(',',' , ').replace('-',' - ')
+        for symbol in ['.','-',',',')']:
+            line = line.replace(symbol,f' {symbol} ')
         line = line.replace('  ',' ').replace('  ',' ').strip()
         if line == '':
             continue
         if not  re.match(r'^[a-zA-Z]', line):
             
             line = ' '.join(reversed([word if ord(word[0])<= 57 and ord(word[0])>= 48 else word[::-1] for word in line.split(' ')]))
-        line = line.replace(' .','.').replace('. ','.').replace(' ,',',').replace(', ',',')
+        for symbol in ['.','-',',',')']:
+            line = line.replace(f' {symbol}',symbol).replace(f'{symbol} ',symbol)
+        # line = line.replace(' .','.').replace('. ','.').replace(' ,',',').replace(', ',',')
         new_text2+=line + '\n'
     return new_text2
 

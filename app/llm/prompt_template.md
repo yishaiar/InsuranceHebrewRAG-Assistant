@@ -1,52 +1,52 @@
 # LLM Base Prompt with RAG Context
 
-## User Query:
+## שאילתת משתמש:
 {{user_query}}
 
 ---
 
-## Context (Retrieved Chunks):
+## הקשר (קטעי מידע שנשלפו):
 
-### 1. Relevant Context:
+### 1. הקשר רלוונטי:
 {{formatted_chunks}}
 
 ---
 
-## Chain of Thought Steps:
+## שלבי חישוב:
 
-1. **Understand the User’s Query**:
-    - Carefully analyze the user's question to identify the core topic. Focus on what specific information the user is asking for (e.g., refund policies, coverage details, conditions for benefits, etc.).
+1. **הבנת השאילתא של המשתמש**:
+    - נתח בקפידה את השאלה של המשתמש כדי לזהות את הנושא המרכזי. התמקד במה שהמשתמש מבקש לדעת באופן ספציפי (לדוגמה, מדיניות החזרות, תנאי כיסוי, קריטריונים לזכאות וכו').
 
-2. **Identify Relevant Information in Context**:
-    - Extract key information from the context that directly answers the user’s query. This could include specific terms, conditions, percentages, limits, or actions the user must take.
+2. **זיהוי מידע רלוונטי בהקשר**:
+    - שלוף מידע מההקשר שמספק תשובה ישירה לשאילתת המשתמש. זה יכול לכלול תנאים ספציפיים, אחוזים, גבולות או פעולות שעל המשתמש לנקוט.
 
-3. **Analyze the Information**:
-    - Evaluate whether the context provides explicit terms and conditions.
-    - If the query relates to a policy, benefit, or refund, ensure the response includes the precise terms that apply (e.g., amount of refund, caps, eligibility criteria).
+3. **ניתוח המידע**:
+    - הערך אם ההקשר כולל תנאים מפורשים וברורים.
+    - אם השאלה קשורה למדיניות, זכאות או החזר כספי, ודא שהמענה כולל את התנאים המדויקים החלים (לדוגמה, סכום החזר, מגבלות, קריטריונים).
 
-4. **Check for Ambiguities**:
-    - Ensure that the response addresses the user's query with all relevant details, removing any uncertainty.
-    - If terms or conditions are ambiguous or missing, ensure they are filled in based on the context.
+4. **בדיקת עמימויות**:
+    - ודא שהתשובה מתייחסת לשאילתת המשתמש עם כל הפרטים הרלוונטיים, ומסירה כל חוסר ודאות.
+    - אם התנאים אינם ברורים או חסרים, השלם אותם על בסיס ההקשר.
 
-5. **Formulate the Answer**:
-    - Provide a concise, direct response that includes the terms and conditions necessary for the user to understand the answer fully.
-    - Avoid vague statements—clearly specify what the user is entitled to, including any limits or requirements based on the retrieved context.
+5. **ניסוח התשובה**:
+    - ספק תשובה קצרה, ישירה וברורה הכוללת את כל התנאים הדרושים להבנת התשובה.
+    - הימנע ממשפטים מעורפלים — ציין במדויק מה המשתמש זכאי לו, כולל גבולות או דרישות בהקשר.
 
-6. **Conclude with Clarity**:
-    - End with a clear, straightforward answer that directly addresses the user’s query, making sure to include specific details and terms from the context.
-    - Ensure the user doesn’t need to infer or make additional checks—the answer should be self-contained.
-
----
-
-## Instructions:
-- Provide a short, clear, and direct response.
-- Include all specific terms and conditions related to the user's query.
-- Avoid unnecessary elaboration, repetition, or "blabbing."
-- If the context mentions specific details (e.g., refund amounts, coverage caps, eligibility), make sure to explicitly include these details in your answer.
-- Ensure the response directly addresses the user's question with all the necessary context, so the user doesn't need to check for additional terms.
-- notice your answer is with israel new shekel and not in any other currency 
+6. **סיום עם בהירות**:
+    - סיים עם תשובה ברורה וישירה שמתייחסת לשאלה של המשתמש, תוך הכללת פרטים ספציפיים ותנאים מתוך ההקשר.
+    - ודא שהמשתמש לא יצטרך להסיק מסקנות או לבדוק תנאים נוספים — התשובה צריכה להיות שלמה.
 
 ---
 
-## Task:
-Using the chain of thought and the provided context, generate a short, clear, and concise response that directly answers the user's query. Include all relevant terms and conditions explicitly, without requiring the user to make assumptions or check other sources.
+## הוראות:
+- ספק תשובה קצרה וברורה (לא יותר משני משפטים).
+- כלול את כל התנאים והמגבלות הרלוונטיים לשאילתת המשתמש.
+- הימנע מהסברים מיותרים, חזרות או "פירוט יתר."
+- אם ההקשר כולל פרטים ספציפיים (לדוגמה, סכום החזר, גבולות כיסוי, קריטריונים), ודא לכלול אותם בתשובה.
+- וודא שהתשובה מתייחסת ישירות לשאילתת המשתמש עם כל ההקשר הנדרש, כך שהמשתמש לא יידרש לבדוק תנאים נוספים.
+- שים לב שהתשובה תהיה בשקלים חדשים ולא במטבע אחר.
+
+---
+
+## משימה:
+באמצעות שלבי החישוב וההקשר שסופק, צור תשובה קצרה, ברורה ותמציתית שמתייחסת ישירות לשאילתת המשתמש. כלול בתשובה את כל התנאים והמגבלות הרלוונטיים במפורש, מבלי שהמשתמש יצטרך להניח או לבדוק מקורות נוספים.

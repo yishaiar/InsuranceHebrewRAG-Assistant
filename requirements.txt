@@ -1,10 +1,10 @@
 python-dotenv
-numpy<2
-pandas
-matplotlib
-seaborn
-requests
-spacy
+numpy
+# pandas
+# matplotlib
+# seaborn
+# requests
+# spacy
 # python -m spacy download en_core_web_sm
 sentence_transformers
 
@@ -20,3 +20,6 @@ langchain
 # !pip install ollama openai --quiet
 
 faiss-cpu
+
+transformers
+bert-score

@@ -15,9 +15,7 @@ project run from  main.ipynb
     ```
 
 ## 📋 TODOs
-- [ ] TODO 1
-- [ ] TODO 2
-- [ ] TODO 3
+- Install ollama on machine (required to load the llm model)
 
 
 question examples:
@@ -25,38 +23,42 @@ question examples:
 שאלה: האם מקבלים החזר מלא על הטיפולים   
 שאלה: כמה טיפולים מכוסים  
 
+# Solution Overview
 
+This solution demonstrates how to process a Hebrew PDF, extract and clean its content, perform text retrieval using a RAG (Retrieval Augmented Generation) approach, and finally query a Hebrew LLM (Language Model) to answer a user query. Additionally, the solution evaluates the model using various metrics.
 
-Describe an architectural concept, assuming that the process is carried out in a GCP or AWS environment, and the content of the system is:  
-1.	Receiving multiple types of documents in DOC / DOCX / PDF / TXT / Json / JPEG / PNG / JIF format 
-2.	Building 2 interfaces (Request \ Response)   
-3.	Construction and updating of a generic schema  
-4.	Receiving the required information from the screens for analysis (in JSON format) 
-5.	Validation that the received information is in the desired structure   
-6.	Free text analysis and structured information of the documents (the core capability of the AI model) 
-7.	Building a uniform summary structure and creating an automatic summary of the findings of the information analysis
-8.	Externalizing a service that receives the information required for analysis (in JSON format) and returns an answer object that includes the text of the summary and synchronously running the service (returning the error including an error code)
+## 1. Load the PDF and Parse It
+- **Open PDF:** Load the PDF and extract text along with word-level metadata (e.g., position) from each page.
+- **Track Word Positions:** Identify and map the position of the first word in each line.
+- **Extract Line Metadata:** Extract metadata from each first word, which represents the start of each line.
+- **Remove Header and Footer:** Exclude text located in the header and footer regions based on vertical position.
+- **Format Text:** Adjust punctuation, reverse misaligned words, and ensure proper formatting for both English and Hebrew text.
+- **Clean and Return Text:** After processing all pages, return the cleaned and formatted text, excluding headers and footers.
 
-architecture
-1.	Load the pdf and parse it:
-    a. Open PDF: Load the PDF and extract text and word-level metadata (e.g., position) from each page.
-    b. Track Word Positions: Identify and map the position of the first word in each line.
-    c. Extract the line metadata from each first word metadata
-    e. Remove Header and Footer: Exclude text located in the header and footer regions based on vertical position.
-    f. Format Text: Adjust punctuation, reverse misaligned words, and ensure proper formatting for English and Hebrew text.
-    h. Clean and Return Text: After processing all pages, return the cleaned and formatted text, excluding headers/footers.
+## 2. Create RAG (Retrieval Augmented Generation)
+- **Split Text Into Chunks:** Use `RecursiveCharacterTextSplitter` from LangChain to split the text into manageable chunks.
+- **Create RAG:** Build the RAG (in-memory) using FAISS, since the document is short.
+- **Hebrew Embedding Model:** Use the `sentence-transformers-alephbert` model (a Hebrew model) for embedding generation.
+- **Normalize Embeddings:** Normalize the embeddings to a range of 0-1 to threshold irrelevant chunks (threshold = 0.2).
+- **Chunk Selection:** Retrieve only the top `k=5` most relevant chunks with similarity scores higher than the threshold.
 
-2.	Create rag 
-    a.  split text into chunks
-3.	Create function to ask questions (no need for UI)
-4.	Function to Display question and answer
-5.	Use chat gpt for questions and correct answers db for validation
-6.	Verify correct answers from rag using bert similarity/embedding
+## 3. Query the LLM Model
+- **Create an LLM Prompt:** Create a prompt based on the user query and the retrieved chunks from RAG.
+- **Context Insertion:** Insert the context into the prompt template, following the Chain of Thought guidelines.
+- **LLM Model Used:** The model used is `dictalm2.0-instruct:f16`, which is the best small Hebrew LLM from the Hebrew leaderboard. (Note: My PC is without GPU, so this was the optimal choice for Hebrew text processing).
+- **API Usage:** The LLM is queried using the OLLAMA API.
 
+## 4. Metrics - BERT Similarity
+- **Hebrew BERT Model:** Use the `xlm-roberta-base` model for BERT-based calculations.
+- **Metric Calculation:** Using the `transformers` and `bert_score` libraries, the following metrics are calculated:
+  - **Precision**
+  - **Recall**
+  - **F1**
+  - **Similarity**
+- **Validation Dataset:**
+  - Created a validation dataset with reference answers (both correct and incorrect).
+  - **Testing Approach 1:** Evaluate the similarity between the LLM response and the user query (using Recall, F1, and Similarity).
+  - **Testing Approach 2:** Compare the LLM response with predefined correct and incorrect answers from the validation dataset (using Precision, F1, and Similarity).
 
-Pgadmin with multiple collections schema , Pgadmin, elastic search, redis
-
-Rabitmq, rest api for manual message, 
-Container is service with 1 goal separation is by front end/backend
-Question if this is used in multiple places
-No reason to open multiple services which all for same usage
+## 5. Comparison of Results
+- **Metrics Comparison:** The evaluation was based on a comparison between the predicted LLM responses and the correct or incorrect reference answers, assessing Precision, Recall, F1, and Similarity values.

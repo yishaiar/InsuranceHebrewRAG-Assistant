@@ -2,19 +2,31 @@
 from ollama import chat,generate,pull
 import os
 
-
+def prompt_llm(prompt,model):
+  pull(model)# download the model if not exists using ollama
+  stream = chat(
+      model=model,
+      messages=[{'role': 'user', 'content': prompt}],
+      stream=True,
+  )
+  full_text = ''
+  for chunk in stream:
+    chunk_text = chunk['message']['content']
+    print(chunk_text, end='', flush=True)
+    full_text += chunk_text
+  return full_text
 
 def format_chunks(chunks):
     formatted_context = "\n".join([f"{i+1}. {chunk.strip()}" for i, chunk in enumerate(chunks)])
     return formatted_context
 
 # Function to load the markdown template and replace placeholders with actual data
-def load_and_format_prompt(user_query, retrieved_chunks,template_path = 'app/llm/prompt_template.md'):
+def load_and_format_prompt(user_query, retrieved_chunks,prompt_template_path = 'app/llm/prompt_template.md'):
     # format the retrieved chunks
     formatted_chunks = format_chunks(retrieved_chunks)
         
     # Load the markdown template
-    with open(template_path, 'r') as file:
+    with open(prompt_template_path, 'r') as file:
         prompt_template = file.read()
 
     # Replace placeholders with actual data
@@ -24,22 +36,9 @@ def load_and_format_prompt(user_query, retrieved_chunks,template_path = 'app/llm
 
 
 
-def prompt_llm(llm_model_name,prompt):
-  pull(llm_model_name)# download the model if not exists
 
-  stream = chat(
-      model=llm_model_name,
-      messages=[{'role': 'user', 'content': prompt}],
-      stream=True,
-  )
-  full_text = ''
-  for chunk in stream:
-    chunk_text = chunk['message']['content']
-    full_text += chunk_text
-    # print(chunk_text, end='', flush=True)
-  return full_text
 
-def print_prompt_and_response(user_query, llm_response):
+def print_prompt_and_response(user_query, retrieved_chunks,model,print_rag_results=False):
     """
     This function prints out the user's input prompt and the final LLM response.
     
@@ -50,5 +49,15 @@ def print_prompt_and_response(user_query, llm_response):
     
     print("===== User Input Query =====")
     print(user_query)
+    if print_rag_results:
+        print("===== Relevant RAG Data =====")
+        for chunk in retrieved_chunks:
+            print(chunk)
+            print('-'*50)
     print("\n===== Final LLM Response =====")
-    print(llm_response)
+    formatted_prompt = load_and_format_prompt(user_query, retrieved_chunks)
+    llm_response = prompt_llm(formatted_prompt,model)
+    print('='*150)
+    print('='*150)
+    return {'user_query':user_query,'retrieved_chunks':retrieved_chunks,'llm_response':llm_response}
+    

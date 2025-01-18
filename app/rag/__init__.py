@@ -46,12 +46,13 @@ def retrieve_relevant_chunks(chunks,similarities, indices,thresh=0.2):
     relevant_chunks = [chunks[i] for j,i in enumerate(indices) if similarities[j]>thresh ] # Retrieve the corresponding text chunks if the similarity is more than 0.5
     return relevant_chunks
 
-def retrieve_context(query, chunks, embedding_model, rag_index, print_results=True):
+def retrieve_context(query, chunks, embedding_model, rag_index, print_rag_results=True, k_chunks=10):
     # call the retrieval system (FAISS, can be replaced with any other retrieval system)
-    similarities, indices = retrieve_relevant_indexes(query,embedding_model,rag_index, k=10)
+    similarities, indices = retrieve_relevant_indexes(query,embedding_model,rag_index, k=k_chunks)
     relevant_chunks  = retrieve_relevant_chunks(chunks,similarities, indices)
-    if print_results:
-        print("Relevant Chunks:\n")
+    if print_rag_results:
+        print(f"Query: {query}\n")
+        print("Relevant Chunks from RAG:\n")
         for chunk in relevant_chunks:
             print(chunk)
             print('-'*50)
